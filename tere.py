@@ -22,7 +22,31 @@ def create_word_features(words):
     return my_dict
 
 
-if exists("model.pkl"):
+if not exists("model.pkl"):
+    neg_reviews = []
+    for fileid in movie_reviews.fileids('neg'):
+        words = movie_reviews.words(fileid)
+        neg_reviews.append((create_word_features(words), "negative"))
+
+    pos_reviews = []
+    for fileid in movie_reviews.fileids('pos'):
+        words = movie_reviews.words(fileid)
+        pos_reviews.append((create_word_features(words), "positive"))
+
+    train_set = neg_reviews[:750] + pos_reviews[:750]
+    test_set = neg_reviews[750:] + pos_reviews[750:]
+
+    classifier = NaiveBayesClassifier.train(train_set)
+
+    accuracy = accuracy(classifier, test_set)
+    print(f'accuracy: {accuracy * 100}')
+
+    with open('model.pkl', 'wb') as f:
+        pickle.dump(classifier, f)
+
+
+# kalo misal model.pkl dkd, jalanin si else:
+else:
     with open('model.pkl', 'rb') as f:
         classifier = pickle.load(f)
 
@@ -84,26 +108,3 @@ if exists("model.pkl"):
 
                 plt.plot(histogram_equ, color='k')
                 plt.show()
-
-
-else:
-    neg_reviews = []
-    for fileid in movie_reviews.fileids('neg'):
-        words = movie_reviews.words(fileid)
-        neg_reviews.append((create_word_features(words), "negative"))
-
-    pos_reviews = []
-    for fileid in movie_reviews.fileids('pos'):
-        words = movie_reviews.words(fileid)
-        pos_reviews.append((create_word_features(words), "positive"))
-
-    train_set = neg_reviews[:750] + pos_reviews[:750]
-    test_set = neg_reviews[750:] + pos_reviews[750:]
-
-    classifier = NaiveBayesClassifier.train(train_set)
-
-    accuracy = accuracy(classifier, test_set)
-    print(f'accuracy: {accuracy * 100}')
-
-    with open('model.pkl', 'wb') as f:
-        pickle.dump(classifier, f)

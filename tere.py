@@ -1,14 +1,17 @@
-import pickle
-from string import punctuation
+import pickle  # krn hrus save jdi model pickle
+from string import punctuation  # u/ hapus tanda baca
+# u/ klasifikasi model naive dan test akurasi
 from nltk.classify import NaiveBayesClassifier, accuracy
+# u/ membuat create word features biar identifikasi movie review pos/nef dan kata yg ga guna
 from nltk.corpus import movie_reviews, stopwords
-from bs4 import BeautifulSoup
-from requests import get
-from nltk.tokenize import word_tokenize
-from os.path import exists
-import cv2
-import numpy
-import urllib.request
+from bs4 import BeautifulSoup  # u/ scarping dr web, krn pke web mkannya jd html
+from requests import get  # untuk load content web
+from nltk.tokenize import word_tokenize  # u/ memilah word yang diperlukan
+from os.path import exists  # u/ lihat model kita ada atau ga di file saya
+import cv2  # u/ untuk manipulasi gambar
+import numpy  # u/ decode dan encode foto krn laptop ga bs baca gambar, tp angka
+import urllib.request  # u/ load image, pembukaan sebelum encode dan decode
+# u/ rumus menunjukkan foto menggunakan warna hitam (k)
 import matplotlib.pyplot as plt
 
 
